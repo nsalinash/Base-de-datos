@@ -1,0 +1,42 @@
+{% with messages= get_flashed_messages()%}
+{% if messages %}
+{% for messages in messages%}
+    <p>{{messages}}</p>
+{% endfor %}
+{% endif%}
+{% endwith %}
+<form action="/add_contact" method="POST">
+
+    <input type="text" name="RUT persona" placeholder= "RUT persona">
+    <input type="text" name="Nombre persona" placeholder= "Nombre persona">
+    <input type="text" name="Direccion vivienda" placeholder= "Direccion vivienda">
+    <button type="submit">
+        Save 
+    </button>
+
+
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <td>Rut</td>
+            <td>Nombre Apellido</td>
+            <td>Direccion</td>
+            <td>Operations</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for personas in persona %}
+         <tr>
+            <td>{{ personas.0}}</td>
+            <td>{{ personas.1}}</td>
+            <td>{{ personas.2}}</td>
+            <td>
+                <a href="/edit/{{personas.0}}">Edit</a>
+                <a href="/delete/{{personas.0}}">Delete</a>
+            </td>
+         </tr>
+        {% endfor %}
+    </tbody>
+</table>
