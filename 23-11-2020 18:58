@@ -36,7 +36,7 @@ def add_contact():
 @app.route('/edit/<id>')
 def get_contact(id):
     cur = db.cursor()
-    cur.execute("SELECT * FROM `persona` WHERE `RUT persona` = '%s'", (id))
+    cur.execute("SELECT * FROM `persona` WHERE `RUT persona` = '{}' ".format(id))
     data= cur.fetchall()
     print(data[0])
     return 'recevied'
