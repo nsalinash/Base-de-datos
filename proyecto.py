@@ -38,17 +38,27 @@ def get_contact(id):
     cur = db.cursor()
     cur.execute("SELECT * FROM `persona` WHERE `RUT persona` = '{}' ".format(id))
     data= cur.fetchall()
-    print(data[0])
-    return 'recevied'
+    return render_template('edit-contact.html', persona = data[0])
     
-    #return render_template('edit-contact.html', contact = data[0])
+@app.route('/update/<id>', methods = ['POST'])
+def update_contact(id):
+    if request.method == 'POST':
+        RUT_persona = request.form['RUT persona']
+        Nombre_persona = request.form['Nombre persona']
+        Direccion_vivienda = request.form['Direccion vivienda']
+        cur = db.cursor()
+        print(RUT_persona)
+        cur.execute("UPDATE persona SET `RUT persona` = {}, `Nombre persona` = {}, `Direccion vivienda` = {} WHERE `RUT persona` = '269014253';".format(RUT_persona, Nombre_persona, Direccion_vivienda))
+        db.commit()
+        flash('Contacto actualizado satisfactoriamente')
+        return redirect(url_for('Index'))
 
 @app.route('/delete/<string:id>')
 def delete_contact(id):
     cur = db.cursor()
     cur.execute('DELETE FROM `persona` WHERE `RUT persona` = {0}'.format(id))
     db.commit()
-    flash('Se ha eliminado correctamente compi')
+    flash('Se ha eliminado correctamente')
     return redirect(url_for('Index'))
 
 
