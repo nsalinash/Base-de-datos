@@ -48,7 +48,7 @@ def update_contact(id):
         Direccion_vivienda = request.form['Direccion vivienda']
         cur = db.cursor()
         print(RUT_persona)
-        cur.execute("UPDATE persona SET `RUT persona` = {}, `Nombre persona` = {}, `Direccion vivienda` = {} WHERE `RUT persona` = '269014253';".format(RUT_persona, Nombre_persona, Direccion_vivienda))
+        cur.execute("UPDATE persona SET `RUT persona` = '{}', `Nombre persona` = '{}', `Direccion vivienda`= '{}' WHERE `RUT persona` = '{}';".format(RUT_persona, Nombre_persona, Direccion_vivienda, id))
         db.commit()
         flash('Contacto actualizado satisfactoriamente')
         return redirect(url_for('Index'))
