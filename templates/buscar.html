@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+    <form action="/buscarfarmacia" method="POST">   
+    <div class = "form-group">
+        <input type="text" name="Comuna" placeholder= "Comuna" class ="form-control">
+        </div>
+        <div class = "form-group"></div>
+        <button type="submit" class= "btn btn-success btn-block">
+        Buscar
+    </button>
+    <p></p>
+    <p></p>
+    <p></p>
+    <div class="col-md-7"><!-- tabla -->
+        <table class= "table table-striped table-bordered bg-white table-sm" >
+            <thead>
+                <tr>
+                    <td>Comuna</td>
+                    <td>Direccion</td>
+                    <td>Nombre farmacia</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comunas in pertenece %}
+                <tr>
+                    <td>{{ comunas.0}}</td>
+                    <td>{{ comunas.1}}</td>
+                    <td>{{ comunas.2}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+        
+    </form>
+
+
+{% endblock %}

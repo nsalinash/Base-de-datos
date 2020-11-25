@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<form action="/addfarmacia" method="POST">
+    <div class = "form-group">
+    <input type="text" name="Direccion" placeholder= "Direccion" class ="form-control">
+    </div>
+    <div class = "form-group">
+    <input type="text" name="Nombre_farmacia" placeholder= "Nombre farmacia"  class ="form-control">
+    </div>
+    <div class = "form-group">
+        <input type="text" name="Comuna" placeholder= "Comuna"  class ="form-control">
+        </div>
+    <div class = "form-group"></div>
+        <button type="submit" class= "btn btn-success btn-block">
+        Agregar
+        
+    </button>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <div class="col-md-7"><!-- tabla -->
+        <table class= "table table-striped table-bordered bg-white table-sm" >
+            <thead>
+                <tr>
+                    <td>Direccion</td>
+                    <td>Nombre farmacia</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for farmacias in farmacia %}
+                <tr>
+                    <td>{{ farmacias.0}}</td>
+                    <td>{{ farmacias.1}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+
+
+{% endblock %}
