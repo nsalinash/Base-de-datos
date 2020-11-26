@@ -8,7 +8,7 @@ db = mysql.connector.connect(
    host="127.0.0.1",
    user="root",
    passwd="2408",
-   database='mydb'
+   database='mybdp'
 )
 mysql = MySQL(app)
 #Configuracion para la pagina
@@ -17,6 +17,7 @@ app.secret_key = 'mysecretkey'
 @app.route('/')
 def Index():
     return render_template("index.html")
+
 
 @app.route('/agregar')
 def agregar():
@@ -34,9 +35,9 @@ def add_contact():
         Direccion_vivienda= request.form['Direccion_vivienda']
         Comuna = request.form['Comuna']
         cur = db.cursor()
-        cur2 = db.cursor()
-        cur.execute('INSERT INTO `persona` (`RUT_persona`, `Nombre_persona`, `Direccion_vivienda`) VALUES (%s,%s, %s);', (Rut_persona, Nombre_persona, Direccion_vivienda))
-        cur2.execute('INSERT INTO `inscrito` (`PERSONA_RUT_persona`, `MUNICIPIO_Nombre_municipio`) VALUES (%s, %s);', (Rut_persona, Comuna))
+        #cur2 = db.cursor()
+        cur.execute('INSERT INTO `persona` (`RUT_persona`, `Nombre_persona`, `Direccion_vivienda`, `MUNICIPIO_Nombre_municipio`) VALUES (%s,%s, %s, %s);', (Rut_persona, Nombre_persona, Direccion_vivienda, Comuna))
+        #cur2.execute('INSERT INTO `inscrito` (`PERSONA_RUT_persona`, `MUNICIPIO_Nombre_municipio`) VALUES (%s, %s);', (Rut_persona, Comuna))
 
         db.commit()
         flash('Se ha registrado correctamente')
@@ -51,6 +52,21 @@ def get_contact(id):
     data= cur.fetchall()
     return render_template('edit-contact.html', persona = data[0])
     
+@app.route('/receta')
+def receta():
+    return render_template("receta.html")
+
+@app.route('/genericos')
+def genericos():
+    return render_template("genericos.html")
+
+@app.route('/medicamentos')
+def medicamentos():
+    return render_template("medicamentos.html")
+
+
+
+
 @app.route('/update/<id>', methods = ['POST'])
 def update_contact(id):
     if request.method == 'POST':
@@ -74,7 +90,7 @@ def delete_contact(id):
 @app.route('/mostrar/<id>')
 def mostrar_farmacias(id):
     cur = db.cursor()
-    print("id = ",id[10:15])
+
     print("Id completa = ",id)
     cur.execute("SELECT MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(id))
     data = cur.fetchall()
@@ -112,7 +128,7 @@ def buscar_farmacia():
     if request.method == 'POST':
         Comuna = request.form['Comuna']
         cur = db.cursor()
-        cur.execute("SELECT MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(Comuna))
+        cur.execute("SELECT pertenece.MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(Comuna))
         data = cur.fetchall()
         print(data)
         return render_template("buscar.html", pertenece = data)
