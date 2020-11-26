@@ -1,12 +1,42 @@
 {% extends 'layout.html' %}
 
-
 {% block body %}
 
+    <form action="/buscarfarmacia" method="POST">
+    <div class = "form-group">
+        <input type="text" name="Receta" placeholder= "Receta" class ="form-control">
+        </div>
+        <div class = "form-group"></div>
+        <button type="submit" class= "btn btn-success btn-block">
+        Ver
+    </button>
+    <p></p>
+    <p></p>
+    <p></p>
+    <div class="col-md-7"><!-- tabla -->
+        <table class= "table table-striped table-bordered bg-white table-sm" >
+            <thead>
+                <tr>
+                    <td>Fecha de Prescripción</td>
+                    <td>Medicamento</td>
+                    <td>RUT Persona</td>
+                    <td>RUT Médico</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recetas in receta %}
+                <tr>
+                    <td>{{ recetas.0}}</td>
+                    <td>{{ recetas.1}}</td>
+                    <td>{{ recetas.2}}</td>
+                    <td>{{ recetas.3}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 
-
-
-
+    </form>
 
 {% endblock %}

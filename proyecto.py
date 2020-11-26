@@ -27,6 +27,21 @@ def agregar():
 
     return render_template("agregar.html", persona = data)    
 
+@app.route('/genericos')
+def genericos():
+    cur = db.cursor()
+    cur.execute('SELECT * FROM lista_de_precio_medicamento_generico')
+    data = cur.fetchall()
+    return render_template("genericos.html", generico = data)
+
+@app.route('/receta')
+def receta():
+    cur = db.cursor()
+    cur.execute("SELECT * from receta")
+    data = cur.fetchall()
+    return render_template("receta.html", receta = data)
+
+
 @app.route('/add_contact', methods= ['POST'])
 def add_contact():
     if request.method == 'POST':
@@ -50,21 +65,38 @@ def get_contact(id):
     cur = db.cursor()
     cur.execute("SELECT * FROM `persona` WHERE `RUT_persona` = '{}' ".format(id))
     data= cur.fetchall()
-    return render_template('edit-contact.html', persona = data[0])
+    return render_template('edit-contact.html', persona = data)
     
-@app.route('/receta')
-def receta():
-    return render_template("receta.html")
 
-@app.route('/genericos')
-def genericos():
-    return render_template("genericos.html")
+
+@app.route('/add_medicamentos', methods= ['POST'])
+def add_medicamentos():
+    if request.method == 'POST':
+        Nombre_medicamento= request.form['Nombre_medicamento']
+        ID_medicamento= request.form['ID_medicamento']
+        Tipo_farmaco= request.form['Tipo_farmaco']
+        cur = db.cursor()
+        cur.execute('INSERT INTO medicamento (Nombre_medicamento, ID_medicamento, Tipo_farmaco) VALUES (%s,%s, %s);', (Nombre_medicamento, ID_medicamento,Tipo_farmaco))
+        db.commit()
+        flash('Se ha registrado correctamente')
+        return redirect(url_for('medicamentos'))
+
 
 @app.route('/medicamentos')
 def medicamentos():
-    return render_template("medicamentos.html")
+    cur= db.cursor()
+    cur.execute('SELECT * FROM medicamento')
+    data= cur.fetchall()
+    return render_template("medicamentos.html", medicamento = data)
+    
+            
+@app.route('/venta')
+def venta():
+    cur = db.cursor()
+    cur.execute("SELECT * FROM medicamento")
+    data = cur.fetchall()
 
-
+    return render_template("venta.html", venta = data)
 
 
 @app.route('/update/<id>', methods = ['POST'])
@@ -92,7 +124,7 @@ def mostrar_farmacias(id):
     cur = db.cursor()
 
     print("Id completa = ",id)
-    cur.execute("SELECT MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(id))
+    cur.execute("SELECT pertenece.MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(id))
     data = cur.fetchall()
     print("data = ",data)
     return render_template('farmacia_cercana.html', farmacia = data)
@@ -114,10 +146,10 @@ def add_farmacia():
         Direccion = request.form['Direccion']
         Nombre = request.form['Nombre_farmacia']
         Comuna = request.form['Comuna']
-        cur2 = db.cursor()
         cur = db.cursor()
-        cur.execute('INSERT INTO `farmacia` (`Direccion`, `Nombre_farmacia`) VALUES (%s,%s);', (Direccion, Nombre))
-        cur2.execute("INSERT INTO `pertenece` (`MUNICIPIO_Nombre_municipio`, `FARMACIA_Direccion`) VALUES (%s,%s);", (Comuna, Direccion))
+        cur2 = db.cursor()
+        cur.execute('INSERT INTO `farmacia` (`Direccion`, `Nombre_farmacia`, `MUNICIPIO_Nombre_municipio`) VALUES (%s,%s,%s);', (Direccion, Nombre, Comuna))
+        cur2.execute('INSERT INTO `pertenece` (`MUNICIPIO_Nombre_municipio`, `FARMACIA_Direccion`) VALUES (%s, %s);', (Comuna, Direccion ))
         db.commit()
         flash('Se ha registrado correctamente')
         return redirect(url_for('farmacias'))
@@ -128,7 +160,8 @@ def buscar_farmacia():
     if request.method == 'POST':
         Comuna = request.form['Comuna']
         cur = db.cursor()
-        cur.execute("SELECT pertenece.MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(Comuna))
+        #cur.execute("SELECT pertenece.MUNICIPIO_Nombre_municipio, farmacia.Direccion, farmacia.Nombre_farmacia FROM pertenece INNER JOIN farmacia ON pertenece.MUNICIPIO_Nombre_municipio = '{}' and pertenece.FARMACIA_Direccion = farmacia.Direccion".format(Comuna))
+        cur.execute("SELECT * FROM farmacia WHERE MUNICIPIO_Nombre_municipio = '{}' ".format(Comuna))
         data = cur.fetchall()
         print(data)
         return render_template("buscar.html", pertenece = data)
@@ -136,4 +169,4 @@ def buscar_farmacia():
 
 
 if __name__ == '__main__':
-    app.run(port = 3000, debug = True)
+    app.run(port = 3000, debug = True) 

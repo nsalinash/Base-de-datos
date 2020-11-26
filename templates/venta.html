@@ -2,13 +2,15 @@
 
 
 {% block body %}
-    <form action="/genericos" method="POST">
+
+
+<form action="/buscarfarmacia" method="POST">   
     <div class = "form-group">
-        <input type="text" name="genericos" placeholder= "genericos" class ="form-control">
+        <input type="text" name="Venta" placeholder= "Venta" class ="form-control">
         </div>
         <div class = "form-group"></div>
         <button type="submit" class= "btn btn-success btn-block">
-        Buscar
+        Comprar
     </button>
     <p></p>
     <p></p>
@@ -17,25 +19,25 @@
         <table class= "table table-striped table-bordered bg-white table-sm" >
             <thead>
                 <tr>
-                    <td>Nombre </td>
-                    <td>Precio</td>
-                    <td>Fecha</td>
+                    <td>Nombre</td>
+                    <td>Tipo</td>
                 </tr>
             </thead>
             <tbody>
-                {% for genericos in generico %}
+                {% for ventas in venta %}
                 <tr>
-                    <td>{{ genericos.0}}</td>
-                    <td>{{ genericos.1}}</td>
-                    <td>{{ genericos.2}}</td>
+                    <td>{{ ventas.0}}</td>
+                    <td>{{ ventas.1}}</td>
+   
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
-
+    
+        
     </form>
+
 
 
 {% endblock %}
