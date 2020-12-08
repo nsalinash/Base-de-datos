@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class = "row">
+    <div class = "col-md-5"><!-- formulario -->
+        {% with messages= get_flashed_messages() %}
+        {% if messages %}
+        {% for messages in messages %}
+        <div class = "alert alert-success alert-dismissible fade show" role = "alert">
+            {{messages}}
+            <button type = "button" class = "close" data-dismiss = "alert" aria-label = "Close">
+                <span aria-hidden = "true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class = "card card-body">
+            <form action = "/add_recipe" method = "POST">
+                <div class = "form-group">
+                    <input type = "text" name = "FECHA_DE_PRESCRIPCIÓN_DDMMAA" placeholder = "Fecha de prescripción" class = "form-control">
+                </div>
+                <div class = "form-group">
+                    <input type = "text" name = "MEDICAMENTO_Nombre_medicamento" placeholder = "Medicamento" class = "form-control">
+                </div>
+                <div class = "form-group">
+                    <input type = "text" name = "PERSONA_RUT_persona" placeholder = "RUT persona" class = "form-control">
+                </div>
+                <div class = "form-group">
+                    <input type = "text" name = "MEDICO_RUT_Medico" placeholder = "RUT médico" class = "form-control">
+                </div>
+                <div class = "form-group">
+                    <button type = "submit" class = "btn btn-primary btn-block">
+                        Guardar 
+                    </button>
+                </div>
+            </form> 
+        </div>
+
+    </div>
+    <div class = "col-md-7"><!-- tabla -->
+        <table class = "table table-striped table-bordered bg-white table-sm">
+            <thead>
+                <tr>
+                    <td>Fecha de prescripción</td>
+                    <td>Medicamento</td>
+                    <td>RUT persona</td>
+                    <td>RUT médico</td>
+                    <td>Operations</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recetas in receta %}
+                <tr>
+                    <td>{{recetas.0}}</td>
+                    <td>{{recetas.1}}</td>
+                    <td>{{recetas.2}}</td>
+                    <td>{{recetas.3}}</td>
+                    <td>
+                        <a href = "/borrarr/{{recetas.2}}" class = "btn btn-danger">Borrar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
